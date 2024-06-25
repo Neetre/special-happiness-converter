@@ -7,13 +7,20 @@ Neetre 2024
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-from pathlib import Path
+from tkinter.ttk import Progressbar
 
+from converter import convert_audio, convert_image, convert_video
+
+video_extensions = ['.mp4', '.avi', '.mov', '.mkv']
+audio_extensions = ['.mp3', '.wav', '.flac']
+image_extensions = ['.png', '.jpg', '.jpeg', 'heic']
 
 class FileConverterApp:
     def __init__(self, root):
         self.root = root
         self.root.title("File Converter")
+        self.progress = Progressbar(root, orient=tk.HORIZONTAL, length=200, mode='determinate')
+        self.progress.pack()
 
         self.input_label = tk.Label(root, text="Select File:")
         self.input_label.pack()
@@ -48,33 +55,29 @@ class FileConverterApp:
             return
 
         try:
-            if output_format == "mp4":
-                self.convert_to_mp4(input_file)
-            elif output_format == "mp3":
-                self.convert_to_mp3(input_file)
-            elif output_format == "png":
-                self.convert_to_png(input_file)
+            if output_format in video_extensions:
+                convert_video(input_file, format="mp4", progress_bar=self.update_progress)
+            elif output_format in audio_extensions:
+                convert_audio(input_file, format="mp3", progress_bar=self.update_progress)
+            elif output_format in image_extensions:
+                convert_image(input_file, suffix=".png")
+                self.progress['value'] = 100
+
             messagebox.showinfo("Success", "Conversion completed successfully.")
         except Exception as e:
             messagebox.showerror("Error", f"Conversion failed: {str(e)}")
-            
-    def convert_to_mp4(self, input_file):
-        output_file = str(Path(input_file).with_suffix('.mp4'))
-        clip = VideoFileClip(input_file)
-        clip.write_videofile(output_file)
-    
-    def convert_to_mp3(self, input_file):
-        output_file = str(Path(input_file).with_suffix('.mp3'))
-        audio = AudioSegment.from_file(input_file)
-        audio.export(output_file, format="mp3")
-
-    def convert_to_png(self, input_file):
-        output_file = str(Path(input_file).with_suffix('.png'))
-        image = Image.open(input_file)
-        image.save(output_file)
+        finally:
+            self.progress.stop()
+        
+    def update_progress(self, progress):
+        self.progress['value'] = progress
 
 
-if __name__ == "__main__":
+def gui():
     root = tk.Tk()
     app = FileConverterApp(root)
     root.mainloop()
+
+
+if __name__ == "__main__":
+    gui()
