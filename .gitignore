@@ -1,4 +1,7 @@
+# Environments
 .venv/
 
+
+# Files
 *.wav
 *.mp3

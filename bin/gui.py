@@ -11,9 +11,9 @@ from tkinter.ttk import Progressbar
 
 from converter import convert_audio, convert_image, convert_video
 
-video_extensions = ['.mp4', '.avi', '.mov', '.mkv']
-audio_extensions = ['.mp3', '.wav', '.flac']
-image_extensions = ['.png', '.jpg', '.jpeg', 'heic']
+video_extensions = ['mp4', 'avi', 'mov', 'mkv']
+audio_extensions = ['mp3', 'wav', 'flac']
+image_extensions = ['png', 'jpg', 'jpeg', 'heic']
 
 class FileConverterApp:
     def __init__(self, root):
@@ -59,6 +59,7 @@ class FileConverterApp:
                 convert_video(input_file, format="mp4", progress_bar=self.update_progress)
             elif output_format in audio_extensions:
                 convert_audio(input_file, format="mp3", progress_bar=self.update_progress)
+                self.progress['value'] = 100
             elif output_format in image_extensions:
                 convert_image(input_file, suffix=".png")
                 self.progress['value'] = 100

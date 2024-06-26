@@ -16,8 +16,9 @@ def args_parse():
     parser.add_argument("--cli", action="store_true", help="Run the program in CLI mode")
     parser.add_argument("--gui", action="store_true", help="Run the program in GUI mode")
     parser.add_argument("--type", type=str, help="Type of file (image, audio, video)")
-    parser.add_argument("--input-ext", type=str, help="Input file extension")
-    parser.add_argument("--output-ext", type=str, help="Output file extension")
+    parser.add_argument("-in", "--input", type=str, help="Input file path")
+    parser.add_argument("-s", "--suffix", type=str, help="Output file suffix")
+    # parser.add_argument("-out", "--output", type=str, help="Output file path")
     parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
     return parser.parse_args()
 
@@ -32,10 +33,13 @@ def main():
     if args.cli:
     
         if args.type == "image":
-            convert_image(args.input, args.output)
+            suffix = args.suffix if args.suffix else ".png"
+            convert_image(args.input, suffix)
         elif args.type == "audio":
-            convert_audio(args.input, args.output)
+            suffix = args.suffix if args.suffix else ".mp3"
+            convert_audio(args.input, suffix)
         elif args.type == "video":
-            convert_video(args.input, args.output)
+            suffix = args.suffix if args.suffix else ".mp4"
+            convert_video(args.input, suffix)
         else:
             print("Invalid type of file. Please provide image, audio, or video.")
