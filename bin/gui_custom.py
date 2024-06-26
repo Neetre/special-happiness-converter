@@ -1,8 +1,12 @@
+'''
+The program creates a GUI for the file converter.
+The user can select a file and choose the output format (video, audio, or image) to convert the file to.
 
+Neetre 2024
+'''
 
 import customtkinter
 from tkinter import filedialog, messagebox
-from pathlib import Path
 from converter import convert_audio, convert_image, convert_video
 
 
@@ -17,7 +21,7 @@ class FileConverterApp(customtkinter.CTk):
         self.title("File Converter")
         self.geometry("500x300")
         customtkinter.set_appearance_mode("System")
-        customtkinter.set_default_color_theme("blue")
+        customtkinter.set_default_color_theme("green")
 
         self.grid_rowconfigure(0, weight=1)  # Make the row expandable
         self.grid_columnconfigure(1, weight=1) 
@@ -99,12 +103,12 @@ class FileConverterApp(customtkinter.CTk):
 
         try:
             if output_format in video_extensions:
-                convert_video(input_file, format="mp4", progress_bar=self.update_progress)
+                convert_video(input_file, suffix=output_format, progress_bar=self.update_progress)
             elif output_format in audio_extensions:
-                convert_audio(input_file, format="mp3", progress_bar=self.update_progress)
+                convert_audio(input_file, suffix=output_format, progress_bar=self.update_progress)
                 self.progress.set(1.0)
             elif output_format in image_extensions:
-                convert_image(input_file, suffix=".png")
+                convert_image(input_file, suffix=output_format)
                 self.progress.set(1.0)
 
             messagebox.showinfo("Success", "Conversion completed successfully.")
@@ -116,9 +120,9 @@ class FileConverterApp(customtkinter.CTk):
     def update_progress(self, progress):
         self.progress.set(progress)
 
-def gui():
+def gui_():
     app = FileConverterApp()
     app.mainloop()
 
 if __name__ == "__main__":
-    gui()
+    gui_()
